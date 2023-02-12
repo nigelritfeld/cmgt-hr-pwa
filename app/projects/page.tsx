@@ -61,7 +61,7 @@ async function getTags() {
 }
 
 
-export default function Home() {
+export default function Projects() {
     const {setProjects, projects, searchQuery} = useGlobalContext()
 
     useEffect(()=>{
@@ -74,11 +74,10 @@ export default function Home() {
         return (tags.find((tag)=> tag.name.includes(query)))
     }
     const cards = projects?.filter(({project}, index)=>{
-        return project.spotlight
-    }).slice(0, 4).map(({project, links}: ProjectCardProps, index: number) => <Card key={index} project={project} links={links}/>)
+        return  project.title.includes(searchQuery) || project.description.includes(searchQuery)
+    }).map(({project, links}: ProjectCardProps, index: number) => <Card key={index} project={project} links={links}/>)
     return (
         <main className="w-full">
-            <Hero/>
             {/* 3 column wrapper */}
             <div className="mx-auto w-full max-w-7xl flex-grow lg:flex xl:px-8">
                 {/*<div className="bg-gray-50 pr-4 sm:pr-6 lg:flex-shrink-0 lg:border-l lg:border-gray-200 lg:pr-8 xl:pr-0">*/}
@@ -97,10 +96,7 @@ export default function Home() {
                     <div className="bg-white lg:min-w-0 lg:flex-1">
                         <div className="h-full py-6 px-4 sm:px-6 lg:px-8">
                             {/* Start main area*/}
-                            <h1 className="mt-10 text-4xl font-bold tracking-tight  sm:text-3xl py-2">
-                                Uitgelichte projecten
-                            </h1>
-                            <div className="relative h-32 flex w-full flex-wrap space-x-3" style={{ minHeight: '36rem' }}>
+                            <div className="relative h-full flex w-full flex-wrap space-x-3" style={{ minHeight: '36rem' }}>
                                 {cards}
                             </div>
                             {/* End main area */}
