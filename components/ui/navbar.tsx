@@ -67,13 +67,13 @@ export const NavBar = ()=> {
                             <div className="flex items-center justify-end">
                                 <div className="flex">
                                     <Link
-                                        href="#"
+                                        href="/projects"
                                         className="rounded-md px-3 py-2 text-sm font-medium text-indigo-200 hover:text-white"
                                     >
                                         Projecten
                                     </Link>
                                     <Link
-                                        href="#"
+                                        href="@/components/ui/navbar#"
                                         className="rounded-md px-3 py-2 text-sm font-medium text-indigo-200 hover:text-white"
                                     >
                                         Tags
@@ -104,7 +104,7 @@ export const NavBar = ()=> {
                                             <Menu.Item>
                                                 {({ active }) => (
                                                     <Link
-                                                        href="#"
+                                                        href="@/components/ui/navbar#"
                                                         className={classNames(
                                                             active ? 'bg-gray-100' : '',
                                                             'block px-4 py-2 text-sm text-gray-700'
@@ -117,7 +117,7 @@ export const NavBar = ()=> {
                                             <Menu.Item>
                                                 {({ active }) => (
                                                     <Link
-                                                        href="#"
+                                                        href="@/components/ui/navbar#"
                                                         className={classNames(
                                                             active ? 'bg-gray-100' : '',
                                                             'block px-4 py-2 text-sm text-gray-700'
@@ -130,7 +130,7 @@ export const NavBar = ()=> {
                                             <Menu.Item>
                                                 {({ active }) => (
                                                     <Link
-                                                        href="#"
+                                                        href="@/components/ui/navbar#"
                                                         className={classNames(
                                                             active ? 'bg-gray-100' : '',
                                                             'block px-4 py-2 text-sm text-gray-700'

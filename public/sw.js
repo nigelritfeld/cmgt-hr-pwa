@@ -1,5 +1,6 @@
 const version = "v1";
 
+// todo: Install service worker
 self.addEventListener("install", (event) => {
     event.waitUntil(
         caches.open(version).then((cache) => {
@@ -23,13 +24,44 @@ self.addEventListener("install", (event) => {
     );
 });
 
-self.addEventListener("fetch", (event) => {
+
+// todo: Listen for connection event
+self.addEventListener("hallo", (event) => {
+    // todo: start fetching latest data
+    postMessage('test hallo',)
+})
+
+
+// todo: Check if fetch call was made
+self.addEventListener("fetch", function (event) {
+    // todo: Return projects from index db
     event.respondWith(
-        caches.match(event.request).then((response) => {
+        caches.match(event.request).then(function (response) {
             if (response) {
                 return response;
+            } else {
+                return fetch(event.request)
+                    .then(function (res) {
+
+
+                        return caches.open(version).then(function (cache) {
+
+                            const isUrl = (res.request.url.match("^(http|https)://"))
+
+                            switch (isUrl) {
+                                case true:
+                                    cache.put(res.request.url, res.clone());
+                                    break
+
+                                case false:
+                                    break
+                            }
+
+                            return res;
+                        });
+                    })
+
             }
-            return fetch(event.request);
         })
     );
 });

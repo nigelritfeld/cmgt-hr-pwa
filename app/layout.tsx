@@ -1,9 +1,9 @@
 import './globals.css'
 import {ReactNode} from "react";
-import {NavBar} from './ui/navbar';
-import Footer from "@/app/ui/footer";
+import {NavBar} from '../components/ui/navbar';
+import Footer from "@/components/ui/footer";
 import {GlobalContextProvider} from "@/app/Context/store";
-import {ProjectSlide} from "@/app/ui/projectSlide";
+import {ProjectSlide} from "@/components/ui/projectSlide";
 import {Banner} from "@/components/ui/banner";
 
 export default function RootLayout({

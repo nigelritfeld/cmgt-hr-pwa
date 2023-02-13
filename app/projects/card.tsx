@@ -2,7 +2,6 @@
 import {FC} from "react";
 import {ProjectCardProps} from "@/types/cmgt";
 import {TimeStringToDate} from "@/utils/TimeStringToDate";
-import Link from "next/link";
 import {useGlobalContext} from "@/app/Context/store";
 import {Tags} from "@/components/ui/tags";
 

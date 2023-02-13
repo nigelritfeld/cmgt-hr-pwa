@@ -44,19 +44,22 @@ export const GlobalContextProvider: FC<PropsWithChildren> = ({children}) => {
     useEffect(()=>{
 
         if ('serviceWorker' in navigator) {
-            console.log(navigator.serviceWorker)
-
-            navigator.serviceWorker.register("/sw.js")
-                .then(result=> {
-                    console.log(result)
-                })
-                .catch()
-
-            navigator.serviceWorker.getRegistrations().then(res=> console.log(res))
+            navigator.serviceWorker.getRegistrations().then(res=>
+                {
+                    const item = res[0]
+                    if (!item){
+                        navigator.serviceWorker.register("/sw.js")
+                            .then(result=> {
+                                console.log(result)
+                            })
+                            .catch()
+                    }
+                }
+            )
 
         }
 
-    })
+    },[])
     return (
         <GlobalContext.Provider value={{
             userId, setUserId,

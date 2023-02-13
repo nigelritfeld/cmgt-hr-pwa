@@ -79,6 +79,7 @@ export default function Projects() {
     return (
         <main className="w-full">
             {/* 3 column wrapper */}
+
             <div className="mx-auto w-full max-w-7xl flex-grow lg:flex xl:px-8">
                 {/*<div className="bg-gray-50 pr-4 sm:pr-6 lg:flex-shrink-0 lg:border-l lg:border-gray-200 lg:pr-8 xl:pr-0">*/}
                 {/*    <div className="h-full py-6 pl-6 lg:w-80">*/}
