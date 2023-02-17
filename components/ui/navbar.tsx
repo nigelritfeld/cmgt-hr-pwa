@@ -1,19 +1,22 @@
 'use client';
 import {Disclosure, Menu, Transition} from "@headlessui/react";
 import {Bars3CenterLeftIcon, MagnifyingGlassIcon, XMarkIcon} from "@heroicons/react/20/solid";
-import {ChangeEvent, Fragment} from "react";
+import {ChangeEvent, Fragment, useEffect} from "react";
 import {classNames} from "@/utils/classNames";
 import Link from "next/link";
 import {useGlobalContext} from "@/app/Context/store";
-
 /**
  * Navigation bar component for layout
  * Client component
  * @constructor
  */
 export const NavBar = ()=> {
+
     const {setSearchQuery} = useGlobalContext()
     const search = (e: ChangeEvent) => setSearchQuery(e.target?.value)
+
+    useEffect(()=>{
+    },[])
     return <Disclosure as="nav" className="flex-shrink-0 bg-cmgt-primary">
         {({ open }) => (
             <>
@@ -36,6 +39,7 @@ export const NavBar = ()=> {
                                 <label htmlFor="search" className="sr-only">
                                     Search projects
                                 </label>
+
                                 <div className="relative text-indigo-200 focus-within:text-gray-400">
                                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                         <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />

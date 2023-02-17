@@ -5,12 +5,13 @@ import {useGlobalContext} from "@/app/Context/store";
 import { Transition } from '@headlessui/react';
 
 export const Banner = () => {
-    const {appState, setAppState} = useGlobalContext()
+    const {appState} = useGlobalContext()
     const isOnline = appState === 'online'
-    const hide = () => setAppState('offline')
+    let hidden = false
+    const hide = () => {hidden = true}
     return (
         <Transition
-            show={isOnline}
+            show={!isOnline && !hidden}
             enter="transition-opacity duration-75"
             enterFrom="opacity-0"
             enterTo="opacity-100"

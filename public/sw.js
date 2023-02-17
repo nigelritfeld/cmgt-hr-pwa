@@ -26,10 +26,18 @@ self.addEventListener("install", (event) => {
 
 
 // todo: Listen for connection event
-self.addEventListener("hallo", (event) => {
-    // todo: start fetching latest data
-    postMessage('test hallo',)
-})
+// let communicationPort;
+
+//Save reference to port
+// self.addEventListener('message', (event) => {
+//     if (event.data && event.data.type === 'PORT_INITIALIZATION') {
+//         communicationPort = event.ports[0];
+//     }
+// });
+
+//Send messages
+// communicationPort.postMessage({type: 'MSG_ID'});
+
 
 
 // todo: Check if fetch call was made
@@ -46,16 +54,15 @@ self.addEventListener("fetch", function (event) {
 
                         return caches.open(version).then(function (cache) {
 
-                            const isUrl = (res.request.url.match("^(http|https)://"))
+                            const isUrl = (res.request.url?.match("^(http|https)://"))
 
-                            switch (isUrl) {
-                                case true:
-                                    cache.put(res.request.url, res.clone());
-                                    break
+                            if (isUrl){
+                                if (res.request.url.includes('cmgt.hr.nl')){
 
-                                case false:
-                                    break
+                                }
+                            cache.put(res.request.url, res.clone());
                             }
+
 
                             return res;
                         });

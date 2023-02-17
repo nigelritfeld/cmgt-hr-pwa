@@ -5,6 +5,7 @@ import Footer from "@/components/ui/footer";
 import {GlobalContextProvider} from "@/app/Context/store";
 import {ProjectSlide} from "@/components/ui/projectSlide";
 import {Banner} from "@/components/ui/banner";
+import {InstallAppNotification} from "@/components/ui/notifications/installAppNotification";
 
 export default function RootLayout({
                                        children,
@@ -32,6 +33,7 @@ export default function RootLayout({
 
             </div>
 
+            <InstallAppNotification/>
             </body>
             </html>
         </GlobalContextProvider>
