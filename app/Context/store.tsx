@@ -3,7 +3,7 @@
 import {createContext, useContext, Dispatch, SetStateAction, useState, PropsWithChildren, FC, useEffect} from "react";
 import {CMGTProject, ProjectCardProps} from "@/types/cmgt";
 import {bool} from "prop-types";
-import {open} from "@/utils/indexDB";
+import {open, transaction} from "@/utils/indexDB";
 
 type appState = "offline" | "online"
 
@@ -11,7 +11,7 @@ interface ContextProps {
     userId: string,
     setUserId: Dispatch<SetStateAction<string>>,
     projects: ProjectCardProps[],
-    setProjects: Dispatch<SetStateAction<CMGTProject[]>>
+    setProjects: Dispatch<SetStateAction<ProjectCardProps[]>>
     openSlide: boolean
     selectedProject: CMGTProject | null
     setSelectedProject: Dispatch<SetStateAction<CMGTProject | null>>
@@ -47,7 +47,7 @@ export const GlobalContextProvider: FC<PropsWithChildren> = ({children}) => {
     const [openSlide, setOpenSlide] = useState(false);
     const [selectedProject, setSelectedProject] = useState<CMGTProject | null>(null);
     const [userId, setUserId] = useState('');
-    const [projects, setProjects] = useState<[] | CMGTProject[]>([]);
+    const [projects, setProjects] = useState<[] | ProjectCardProps[]>([]);
     const [appState, setAppState] = useState<appState>('online');
     const [appInstalled, setAppInstalled] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>('');
@@ -69,48 +69,44 @@ export const GlobalContextProvider: FC<PropsWithChildren> = ({children}) => {
             };
         }
     }
-    useEffect(() => {
+    const registerServiceWorker = async () => {
+        if ("serviceWorker" in navigator) {
+            try {
+                const registration = await navigator.serviceWorker.register("/sw.js", {
+                    scope: "/",
+                });
 
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(res => {
-                    const item = res[0]
-                    if (!item) {
-                        navigator.serviceWorker.register("/sw.js")
-                            .then(result => {
-                                console.log(result)
-                                open('projects', 1)
-                                    .then(database => {
-                                        const transaction = database.transaction('projects', 'readwrite');
-                                        transaction.onsuccess = function (event) {
-                                            console.log('[Transaction] ALL DONE!');
-                                        };
-// get store from transaction
-                                        // returns IDBObjectStore instance
-                                        const productsStore = transaction.objectStore('projects');
-// put products data in productsStore
-                                        projects.forEach(function (project) {
-                                            const db_op_req = productsStore.add(project); // IDBRequest
-                                        });
-
-                                    })
-                                    .catch(e => console.error(e))
-                            })
-                            .catch()
-                        navigator.serviceWorker.onmessage = (event) => {
-                            window.alert(event)
-                        };
-                    }
+                if (registration.installing) {
+                    console.log("Service worker installing");
+                } else if (registration.waiting) {
+                    console.log("Service worker installed");
+                } else if (registration.active) {
+                    console.log("Service worker active");
                 }
-            )
+            } catch (error) {
+                console.error(`Registration failed with ${error}`);
+            }
         }
+    };
 
+    useEffect(() => {
+        registerServiceWorker()
+            .then(r => console.log(r))
         window.addEventListener('offline', () => setAppState('offline'))
         window.addEventListener('online', () => notifyWorkerBackgroundSync())
         window.addEventListener('beforeinstallprompt', (e) => setDeferredPrompt(e));
         addEventListener('appinstalled', (event) => setAppInstalled(true));
-
-
     }, [])
+
+    useEffect( ()=>{
+        transaction('cmgt', 1, 'projects', 'project', 'readwrite')
+            .then(store => {
+                projects.forEach(function ({project,links}) {
+                    const db_op_req = store.add(project); // IDBRequest
+                });
+            })
+    }, [projects])
+
     return (
         <GlobalContext.Provider value={{
             userId, setUserId,

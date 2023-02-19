@@ -13,6 +13,7 @@ import {useGlobalContext} from "@/app/Context/store";
 export const NavBar = ()=> {
 
     const {setSearchQuery} = useGlobalContext()
+    // @ts-ignore
     const search = (e: ChangeEvent) => setSearchQuery(e.target?.value)
 
     useEffect(()=>{
@@ -20,7 +21,7 @@ export const NavBar = ()=> {
     return <Disclosure as="nav" className="flex-shrink-0 bg-cmgt-primary">
         {({ open }) => (
             <>
-                <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
+                <div className="mx-auto h-full max-w-7xl px-2 sm:px-4 lg:px-8 flex">
                     <div className="relative flex h-16 items-center justify-between">
                         {/* Logo section */}
                         <Link href="/" className="flex items-center px-2 lg:px-0 xl:w-64">
@@ -76,12 +77,12 @@ export const NavBar = ()=> {
                                     >
                                         Projecten
                                     </Link>
-                                    <Link
-                                        href="@/components/ui/navbar#"
-                                        className="rounded-md px-3 py-2 text-sm font-medium text-indigo-200 hover:text-white"
-                                    >
-                                        Tags
-                                    </Link>
+                                    {/*<Link*/}
+                                    {/*    href="@/components/ui/navbar#"*/}
+                                    {/*    className="rounded-md px-3 py-2 text-sm font-medium text-indigo-200 hover:text-white"*/}
+                                    {/*>*/}
+                                    {/*    Tags*/}
+                                    {/*</Link>*/}
                                 </div>
                                 {/* Profile dropdown */}
                                 <Menu as="div" className="relative ml-4 flex-shrink-0">
@@ -151,7 +152,6 @@ export const NavBar = ()=> {
                         </div>
                     </div>
                 </div>
-
                 <Disclosure.Panel className="lg:hidden">
                     <div className="px-2 pt-2 pb-3">
                         <Disclosure.Button

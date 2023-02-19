@@ -62,7 +62,7 @@ async function getTags() {
 
 
 export default function Projects() {
-    const {setProjects, projects, searchQuery} = useGlobalContext()
+    const {setProjects, projects, searchQuery, appState} = useGlobalContext()
 
     useEffect(()=>{
         getProjects()
@@ -91,9 +91,8 @@ export default function Projects() {
                 {/*        /!* End right column area *!/*/}
                 {/*    </div>*/}
                 {/*</div>*/}
+
                 <div className="min-w-0 flex-1 bg-white xl:flex">
-
-
                     <div className="bg-white lg:min-w-0 lg:flex-1">
                         <div className="h-full py-6 px-4 sm:px-6 lg:px-8">
                             {/* Start main area*/}

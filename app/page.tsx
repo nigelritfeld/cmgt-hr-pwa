@@ -6,10 +6,15 @@ import {Card} from "@/app/projects/card";
 import {useGlobalContext} from "@/app/Context/store";
 import {useEffect} from "react";
 import Hero from "@/components/ui/hero";
+import {getAllFromStore, open, transaction} from "@/utils/indexDB";
 
 const inter = Inter({subsets: ['latin']})
 
 async function getProjects() {
+    const store = await transaction('cmgt', 1, 'projects', 'project', 'readwrite')
+    const storeData = await getAllFromStore(store)
+    if (storeData.length < 1) return storeData
+    console.log("storeData", storeData)
     const response = await CMGT.get('/projects')
 
     let res
@@ -34,6 +39,7 @@ async function getProjects() {
     return res
 
 }
+
 async function getTags() {
     const response = await CMGT.get('/tags')
 
@@ -64,18 +70,19 @@ async function getTags() {
 export default function Home() {
     const {setProjects, projects, searchQuery} = useGlobalContext()
 
-    useEffect(()=>{
+    useEffect(() => {
         getProjects()
             .then(data => setProjects(data))
-            .catch(e=>console.log(e))
-    },[])
+            .catch(e => console.log(e))
+    }, [])
 
-    const filterOnTag = (tags:Tag[], query: string ) => {
-        return (tags.find((tag)=> tag.name.includes(query)))
+    const filterOnTag = (tags: Tag[], query: string) => {
+        return (tags.find((tag) => tag.name.includes(query)))
     }
-    const cards = projects?.filter(({project}, index)=>{
+    const cards = projects?.filter(({project}, index) => {
         return project.spotlight
-    }).slice(0, 4).map(({project, links}: ProjectCardProps, index: number) => <Card key={index} project={project} links={links}/>)
+    }).slice(0, 4).map(({project, links}: ProjectCardProps, index: number) => <Card key={index} project={project}
+                                                                                    links={links}/>)
     return (
         <main className="w-full">
             <Hero/>
@@ -100,7 +107,7 @@ export default function Home() {
                             <h1 className="mt-10 text-4xl font-bold tracking-tight  sm:text-3xl py-2">
                                 Uitgelichte projecten
                             </h1>
-                            <div className="relative h-32 flex w-full flex-wrap space-x-3" style={{ minHeight: '36rem' }}>
+                            <div className="relative h-32 flex w-full flex-wrap space-x-3" style={{minHeight: '36rem'}}>
                                 {cards}
                             </div>
                             {/* End main area */}
