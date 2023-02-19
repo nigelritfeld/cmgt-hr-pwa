@@ -34,6 +34,7 @@ async function getProjects() {
     return res
 
 }
+
 async function getTags() {
     const response = await CMGT.get('/tags')
 
@@ -62,19 +63,27 @@ async function getTags() {
 
 
 export default function Projects() {
-    const {setProjects, projects, searchQuery, appState} = useGlobalContext()
+    const {setProjects, projects, searchQuery, appState, categoryFilter} = useGlobalContext()
 
-    useEffect(()=>{
+    useEffect(() => {
         getProjects()
             .then(data => setProjects(data))
-            .catch(e=>console.log(e))
-    },[])
+            .catch(e => console.log(e))
+    }, [])
 
-    const filterOnTag = (tags:Tag[], query: string ) => {
-        return (tags.find((tag)=> tag.name.includes(query)))
+    const filterOnTag = (tags: Tag[]) => {
+        return !!(tags.find((tag) => categoryFilter.find(category => category.id === tag.id)))
     }
-    const cards = projects?.filter(({project}, index)=>{
-        return  project.title.includes(searchQuery) || project.description.includes(searchQuery)
+    const cards = projects?.filter(({project}, index) => {
+        // if category filter is enabled only filter on tag and description
+        if (categoryFilter.length >= 1 && searchQuery !== '') {
+        console.log(categoryFilter.length)
+            return project.description.includes(searchQuery) || filterOnTag(project.tags)
+        }
+        if ((categoryFilter.length >= 1 && searchQuery === '')){
+            return filterOnTag(project.tags)
+        }
+        return project.title.includes(searchQuery) || project.description.includes(searchQuery)
     }).map(({project, links}: ProjectCardProps, index: number) => <Card key={index} project={project} links={links}/>)
     return (
         <main className="w-full">
@@ -96,7 +105,8 @@ export default function Projects() {
                     <div className="bg-white lg:min-w-0 lg:flex-1">
                         <div className="h-full py-6 px-4 sm:px-6 lg:px-8">
                             {/* Start main area*/}
-                            <div className="relative h-full flex w-full flex-wrap space-x-3" style={{ minHeight: '36rem' }}>
+                            <div className="relative h-full flex w-full flex-wrap space-x-3"
+                                 style={{minHeight: '36rem'}}>
                                 {cards}
                             </div>
                             {/* End main area */}

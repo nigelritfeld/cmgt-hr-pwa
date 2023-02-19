@@ -1,7 +1,7 @@
 'use client';
 
 import {createContext, useContext, Dispatch, SetStateAction, useState, PropsWithChildren, FC, useEffect} from "react";
-import {CMGTProject, ProjectCardProps} from "@/types/cmgt";
+import {CMGTProject, ProjectCardProps, Tag} from "@/types/cmgt";
 import {bool} from "prop-types";
 import {open, transaction} from "@/utils/indexDB";
 
@@ -23,6 +23,8 @@ interface ContextProps {
     setAppInstalled: Dispatch<SetStateAction<boolean>>
     deferredPrompt: any
     setDeferredPrompt: Dispatch<SetStateAction<any>>
+    categoryFilter: Array<Tag>
+    setCategoryFilter: Dispatch<SetStateAction<Array<Tag>>>
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -40,7 +42,9 @@ const GlobalContext = createContext<ContextProps>({
     appInstalled: false,
     setAppInstalled: (): boolean => false,
     deferredPrompt: undefined,
-    setDeferredPrompt: () => null
+    setDeferredPrompt: () => null,
+    categoryFilter: [],
+    setCategoryFilter: () => []
 })
 
 export const GlobalContextProvider: FC<PropsWithChildren> = ({children}) => {
@@ -52,6 +56,7 @@ export const GlobalContextProvider: FC<PropsWithChildren> = ({children}) => {
     const [appInstalled, setAppInstalled] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [deferredPrompt, setDeferredPrompt] = useState<any>()
+    const [categoryFilter, setCategoryFilter] = useState<Array<Tag>>([{id: 1, name:'Jaar 1'}])
     const notifyWorkerBackgroundSync = async () => {
         setAppState('online')
         if (window.navigator.serviceWorker.controller != undefined) {
@@ -116,7 +121,8 @@ export const GlobalContextProvider: FC<PropsWithChildren> = ({children}) => {
             appState, setAppState,
             searchQuery, setSearchQuery,
             appInstalled, setAppInstalled,
-            deferredPrompt, setDeferredPrompt
+            deferredPrompt, setDeferredPrompt,
+            categoryFilter, setCategoryFilter
         }}>
             {children}
         </GlobalContext.Provider>
