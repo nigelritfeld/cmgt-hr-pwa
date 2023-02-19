@@ -215,19 +215,18 @@ export const NavBar = () => {
                     </>
                 )}
             </Disclosure>
-            <nav className="w-full h-16 flex items-center px-4 bg-cmgt-primary/40">
-                <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
-                    <div className=" flex space-x-3">
-                        {
-                            appState === "online" ?
-                                tags.map((tag) =>
-                                   <CategoryTag tag={tag}/>) :
-                                null
+            {
+                appState === "online" ?
+                    (<nav className="w-full h-16 flex items-center px-4 bg-gray-200">
+                        <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
+                            <div className=" flex space-x-3">
+                                {tags.map((tag, index) =>
+                                    <CategoryTag key={index} tag={tag}/>)}
+                            </div>
+                        </div>
+                    </nav>): "Tags zijn alleen zichtbaar als je verbonden bent met het internet."
+            }
 
-                        }
-                    </div>
-                </div>
-            </nav>
         </>
     )
 }

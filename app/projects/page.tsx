@@ -6,32 +6,42 @@ import {Card} from "@/app/projects/card";
 import {useGlobalContext} from "@/app/Context/store";
 import {useEffect} from "react";
 import Hero from "@/components/ui/hero";
+import {getAllFromStore, transaction} from "@/utils/indexDB";
 
 const inter = Inter({subsets: ['latin']})
 
 async function getProjects() {
-    const response = await CMGT.get('/projects')
+    try {
+        const store = await transaction('cmgt', 1, 'projects', 'project', 'readwrite')
+        const storeData = await getAllFromStore(store)
+        if (storeData.length < 1) return storeData
+        console.log("storeData", storeData)
+        const response = await CMGT.get('/projects')
 
-    let res
-    switch (response.status) {
-        case 200:
-            res = response.data.data
-            break
-        case 201:
-            res = response.data.data
-            break
-        case 403:
-            res = response.data.data
-            break
-        default:
-            res = new Error('Failed to fetch data');
+        let res
+        switch (response.status) {
+            case 200:
+                res = response.data.data
+                break
+            case 201:
+                res = response.data.data
+                break
+            case 403:
+                res = response.data.data
+                break
+            default:
+                res = new Error('Failed to fetch data');
+        }
+        if (res == Error) {
+            throw res
+        }
+        // The return value is *not* serialized
+        // You can return Date, Map, Set, etc.
+        return res
+    }catch (e) {
+
     }
-    if (res == Error) {
-        throw res
-    }
-    // The return value is *not* serialized
-    // You can return Date, Map, Set, etc.
-    return res
+
 
 }
 
@@ -78,7 +88,7 @@ export default function Projects() {
         // if category filter is enabled only filter on tag and description
         if (categoryFilter.length >= 1 && searchQuery !== '') {
         console.log(categoryFilter.length)
-            return project.description.includes(searchQuery) || filterOnTag(project.tags)
+            return (project.description.includes(searchQuery) && filterOnTag(project.tags)) || project.title.includes(searchQuery) && filterOnTag(project.tags)
         }
         if ((categoryFilter.length >= 1 && searchQuery === '')){
             return filterOnTag(project.tags)
@@ -107,7 +117,9 @@ export default function Projects() {
                             {/* Start main area*/}
                             <div className="relative h-full flex w-full flex-wrap space-x-3"
                                  style={{minHeight: '36rem'}}>
-                                {cards}
+                                {
+                                    cards.length > 0 ? cards : "Geen projecten gevonden met huidige filters"
+                                }
                             </div>
                             {/* End main area */}
                         </div>

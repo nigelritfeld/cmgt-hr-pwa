@@ -18,7 +18,7 @@ self.addEventListener("activate", (event) => {
 // todo: Install service worker
 self.addEventListener("install", (event) => {
     event.waitUntil(
-        caches.open(version).then((cache) => {
+        caches.open("cache-"+version).then((cache) => {
             return cache.addAll([
                 "/",
                 "/projects",
@@ -86,24 +86,26 @@ self.addEventListener("fetch", function(event) {
             }
         );
     } else {
-        event.respondWith(
-            caches.match(event.request).then(function(response) {
-                // Return the cached response if it exists
-                if (response) {
-                    return response;
-                }
-
-                // Fetch the request and store it in the cache
-                return fetch(event.request).then(function(res) {
-                    if (res.status === 200) {
-                        caches.open("cache-"+version).then(function(cache) {
-                            cache.put(event.request, res.clone());
-                        });
+        if (navigator.onLine){
+            event.respondWith(
+                caches.match(event.request).then(function(response) {
+                    // Return the cached response if it exists
+                    if (response) {
+                        return response;
                     }
-                    return response;
-                });
-            })
-        );
+                    // Fetch the request and store it in the cache
+                    return fetch(event.request).then(function(res) {
+                        if (res.status === 200) {
+                            caches.open("cache-"+version).then(function(cache) {
+                                cache.put(event.request, res.clone());
+                            });
+                        }
+                        return response;
+                    });
+                })
+            );
+        }
+
     }
 });
 

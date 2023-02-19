@@ -8,7 +8,6 @@ export const open = (database: string, version: number, objectStoresName: string
             if (!isSupported()) return Error('Index DB is not supported in this browser.')
             const request = self.indexedDB.open(database, version)
             request.onsuccess = function (event: Event) {
-                console.log('[onsuccess]', request.result);
                 // @ts-ignore
                 resolve(event.target?.result)
             };

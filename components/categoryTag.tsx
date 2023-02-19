@@ -15,17 +15,15 @@ export const CategoryTag: FC<TagProps> = ({tag: {id, name}}) => {
 
     const [active, setActive] = useState(false)
     const toggle = (event: MouseEvent) => {
-        const id = event.target.dataset.id
+        console.log("Toggle category")
         const category = categoryFilter.find(tag => tag.id === id)
         switch (category) {
             case undefined:
-                add({id: parseInt(id), name})
+                add({id: id, name})
                 break;
             default:
                 remove(category.id)
         }
-        console.log(`${name} is currently ${active}`)
-        console.log(categoryFilter)
     }
 
     const add = (tag: Tag) => {
@@ -35,14 +33,16 @@ export const CategoryTag: FC<TagProps> = ({tag: {id, name}}) => {
 
     const remove = (id: number) => {
         setActive(false)
-        setCategoryFilter([...(categoryFilter.filter(tag => tag.id != id))])
+        setCategoryFilter([...(categoryFilter.filter(tag => tag.id !== id))])
     }
 
     useEffect(() => {
-        console.log(`${name} is currently ${active}`)
     }, [active])
     return <span onClick={(e) => toggle(e)} data-id={id} className={classNames(
-        active ? "bg-cmgt-primary" : "border-bg-cmgt-primary border-1",
-        " cursor-pointer text-xs text-white px-2 py-1 rounded-full w-fit"
+        active ?
+            "bg-cmgt-primary" : "text-black bg-cmgt-primary/20",
+        "border-2 border-solid border-cmgt-primary",
+        "flex items-center justify-center",
+        "cursor-pointer text-xs text-white px-2 py-1 rounded-full w-fit"
     )}> {name}</span>
 }

@@ -56,7 +56,7 @@ export const GlobalContextProvider: FC<PropsWithChildren> = ({children}) => {
     const [appInstalled, setAppInstalled] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [deferredPrompt, setDeferredPrompt] = useState<any>()
-    const [categoryFilter, setCategoryFilter] = useState<Array<Tag>>([{id: 1, name:'Jaar 1'}])
+    const [categoryFilter, setCategoryFilter] = useState<Array<Tag>>([])
     const notifyWorkerBackgroundSync = async () => {
         setAppState('online')
         if (window.navigator.serviceWorker.controller != undefined) {
@@ -97,6 +97,7 @@ export const GlobalContextProvider: FC<PropsWithChildren> = ({children}) => {
     useEffect(() => {
         registerServiceWorker()
             .then(r => console.log(r))
+        console.log(window.navigator.standalone)
         window.addEventListener('offline', () => setAppState('offline'))
         window.addEventListener('online', () => notifyWorkerBackgroundSync())
         window.addEventListener('beforeinstallprompt', (e) => setDeferredPrompt(e));
