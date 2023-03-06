@@ -2,8 +2,7 @@
 
 import {createContext, useContext, Dispatch, SetStateAction, useState, PropsWithChildren, FC, useEffect} from "react";
 import {CMGTProject, ProjectCardProps, Tag} from "@/types/cmgt";
-import {bool} from "prop-types";
-import {open, transaction} from "@/utils/indexDB";
+import {transaction} from "@/utils/indexDB";
 
 type appState = "offline" | "online"
 
@@ -53,7 +52,7 @@ export const GlobalContextProvider: FC<PropsWithChildren> = ({children}) => {
     const [userId, setUserId] = useState('');
     const [projects, setProjects] = useState<[] | ProjectCardProps[]>([]);
     const [appState, setAppState] = useState<appState>('online');
-    const [appInstalled, setAppInstalled] = useState<boolean>(false);
+    const [appInstalled, setAppInstalled] = useState<boolean>(true);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [deferredPrompt, setDeferredPrompt] = useState<any>()
     const [categoryFilter, setCategoryFilter] = useState<Array<Tag>>([])
@@ -96,22 +95,26 @@ export const GlobalContextProvider: FC<PropsWithChildren> = ({children}) => {
 
     useEffect(() => {
         registerServiceWorker()
-            .then(r => console.log(r))
-        console.log(window.navigator.standalone)
+            .then(r => console.log('Registered serviceworker'))
+        // console.log(window.navigator.standalone)
         window.addEventListener('offline', () => setAppState('offline'))
         window.addEventListener('online', () => notifyWorkerBackgroundSync())
-        window.addEventListener('beforeinstallprompt', (e) => setDeferredPrompt(e));
+        window.addEventListener('beforeinstallprompt', (e) => {
+            setDeferredPrompt(e)
+            setAppInstalled(false)
+        });
         addEventListener('appinstalled', (event) => setAppInstalled(true));
     }, [])
 
-    useEffect( ()=>{
+    useEffect( () => {
+        if (projects.length === 0) return
         transaction('cmgt', 1, 'projects', 'project', 'readwrite')
             .then(store => {
-                projects.forEach(function ({project,links}) {
+                projects.forEach(function (project) {
                     const db_op_req = store.add(project); // IDBRequest
                 });
             })
-    }, [projects])
+    }, [])
 
     return (
         <GlobalContext.Provider value={{

@@ -13,9 +13,10 @@ const inter = Inter({subsets: ['latin']})
 async function getProjects() {
     const store = await transaction('cmgt', 1, 'projects', 'project', 'readwrite')
     const storeData = await getAllFromStore(store)
-    if (storeData.length < 1) return storeData
     console.log("storeData", storeData)
+    if (storeData.length > 1) return storeData
     const response = await CMGT.get('/projects')
+    console.log(response)
 
     let res
     switch (response.status) {

@@ -9,10 +9,6 @@ import CMGT from "@/plugins/axios";
 import {Tag} from "@/types/cmgt";
 import {CategoryTag} from "@/components/categoryTag";
 
-const getTags = async () => {
-    const response = await CMGT.get('/tags')
-    return response.data.data
-}
 
 /**
  * Navigation bar component for layout
@@ -20,14 +16,10 @@ const getTags = async () => {
  * @constructor
  */
 export const NavBar = () => {
-    const [tags, setTags] = useState<Array<Tag>>([])
     const {setSearchQuery, appState} = useGlobalContext()
     // @ts-ignore
     const search = (e: ChangeEvent) => setSearchQuery(e.target?.value)
 
-    useEffect(() => {
-        getTags().then(tags => setTags(tags))
-    }, [])
     return (
         <>
             <Disclosure as="nav" className="flex-shrink-0 bg-cmgt-primary">
@@ -215,18 +207,6 @@ export const NavBar = () => {
                     </>
                 )}
             </Disclosure>
-            {
-                appState === "online" ?
-                    (<nav className="w-full h-16 flex items-center px-4 bg-gray-200">
-                        <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
-                            <div className=" flex space-x-3">
-                                {tags.map((tag, index) =>
-                                    <CategoryTag key={index} tag={tag}/>)}
-                            </div>
-                        </div>
-                    </nav>): "Tags zijn alleen zichtbaar als je verbonden bent met het internet."
-            }
-
         </>
     )
 }

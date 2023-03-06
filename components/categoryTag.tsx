@@ -1,4 +1,4 @@
-import {FC, useEffect, useState} from "react";
+import {DetailedHTMLProps, FC, useEffect, useState} from "react";
 import {Tag} from "@/types/cmgt";
 import {useGlobalContext} from "@/app/Context/store";
 import {tag} from "postcss-selector-parser";
@@ -14,7 +14,7 @@ export const CategoryTag: FC<TagProps> = ({tag: {id, name}}) => {
     const {categoryFilter, setCategoryFilter} = useGlobalContext()
 
     const [active, setActive] = useState(false)
-    const toggle = (event: MouseEvent) => {
+    const toggle = (event: DetailedHTMLProps<any, MouseEvent>) => {
         console.log("Toggle category")
         const category = categoryFilter.find(tag => tag.id === id)
         switch (category) {
@@ -38,7 +38,7 @@ export const CategoryTag: FC<TagProps> = ({tag: {id, name}}) => {
 
     useEffect(() => {
     }, [active])
-    return <span onClick={(e) => toggle(e)} data-id={id} className={classNames(
+    return <span onClick={toggle} data-id={id} className={classNames(
         active ?
             "bg-cmgt-primary" : "text-black bg-cmgt-primary/20",
         "border-2 border-solid border-cmgt-primary",
